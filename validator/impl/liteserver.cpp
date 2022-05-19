@@ -460,7 +460,7 @@ void LiteQuery::perform_sendMessage(td::BufferSlice data) {
   LOG(INFO) << "started a sendMessage(<" << data.size() << " bytes>) liteserver query";
  td::actor::send_closure_later(
       manager_, &ValidatorManager::check_external_message, data.clone(),
-      [Self = actor_id(this), data = std::move(data), manager = manager_](td::Result<td::Unit> res) {
+      [Self = actor_id(this), data = data.clone(), manager = manager_](td::Result<td::Unit> res) {
         if(res.is_error()) {
            td::actor::send_closure(Self, &LiteQuery::abort_query,
                                     res.move_as_error_prefix("cannot apply external message to current state : "s));
